@@ -18,14 +18,21 @@ export default function KanbanBoardClient({ boardId }: { boardId: string }) {
 
   const [draggedItem, setDraggedItem] = useState<{cardId: string, sourceListId: string} | null>(null);
 
-  useEffect(() => {
-    dispatch({ type: 'SET_ACTIVE_BOARD', payload: boardId });
-  }, [boardId, dispatch]);
-
   const board = state.boards.find(b => b.id === boardId);
 
+  useEffect(() => {
+    if (board) {
+      dispatch({ type: 'SET_ACTIVE_BOARD', payload: boardId });
+    }
+  }, [boardId, dispatch, board]);
+
+
   if (!board) {
-    // In a real app, you might want to show a 404 page or a more specific loading state
+    // This can happen if the data is not loaded yet or the boardId is invalid.
+    // In a real-world app, you might fetch data here or show a 404 page.
+    // For this mock setup, if the board isn't in the state, it might be a new board
+    // that hasn't been persisted and reloaded yet. We'll show a spinner briefly.
+    // A better approach for new boards would be to ensure state is consistent across pages.
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner size="lg" />
