@@ -4,10 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -22,9 +18,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { auth } from '@/lib/firebase';
 import { Spinner } from '@/components/ui/spinner';
 import { Mail, Lock } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email.' }),
@@ -40,6 +36,7 @@ type AuthFormProps = {
 export default function AuthForm({ mode }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { login, signup } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,13 +50,13 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setLoading(true);
     try {
       if (mode === 'signup') {
-        await createUserWithEmailAndPassword(auth, values.email, values.password);
+        await signup(values.email, values.password);
         toast({
           title: 'Account Created!',
           description: "You've been successfully signed up.",
         });
       } else {
-        await signInWithEmailAndPassword(auth, values.email, values.password);
+        await login(values.email, values.password);
         toast({
           title: 'Signed In!',
           description: 'Welcome back.',
