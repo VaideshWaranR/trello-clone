@@ -1,55 +1,25 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Plus, LayoutGrid } from 'lucide-react';
+import { LayoutGrid } from 'lucide-react';
 import Header from '@/components/layout/header';
 import { useKanban } from '@/components/kanban/kanban-context';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { SidebarInset } from '.././../components/ui/sidebar';
 
 export default function BoardsClient() {
-  const { state, dispatch } = useKanban();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newBoardName, setNewBoardName] = useState('');
-
-  const handleCreateBoard = () => {
-    if (newBoardName.trim()) {
-      dispatch({ type: 'ADD_BOARD', payload: { name: newBoardName.trim() } });
-      setNewBoardName('');
-      setIsDialogOpen(false);
-    }
-  };
+  const { state } = useKanban();
 
   return (
-    <>
+    <SidebarInset>
       <Header title="My Boards" />
       <main className="flex-1 p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <Card
-            className="flex min-h-[150px] cursor-pointer flex-col items-center justify-center border-2 border-dashed bg-transparent transition-colors hover:border-primary hover:bg-accent/20"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <Plus className="h-10 w-10 text-muted-foreground" />
-            <p className="mt-2 font-medium text-muted-foreground">
-              Create New Board
-            </p>
-          </Card>
           {state.boards.map(board => (
             <Link href={`/boards/${board.id}`} key={board.id}>
               <Card className="flex min-h-[150px] flex-col justify-between transition-all hover:shadow-md hover:-translate-y-1">
@@ -68,37 +38,6 @@ export default function BoardsClient() {
           ))}
         </div>
       </main>
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create a new board</DialogTitle>
-            <DialogDescription>
-              Give your new board a name to get started.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                value={newBoardName}
-                onChange={e => setNewBoardName(e.target.value)}
-                className="col-span-3"
-                autoFocus
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreateBoard}>Create Board</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </>
+    </SidebarInset>
   );
 }

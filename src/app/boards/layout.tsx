@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Spinner } from '@/components/ui/spinner';
 import { KanbanProvider } from '@/components/kanban/kanban-context';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import AppSidebar from '@/components/layout/sidebar';
 
 export default function BoardsLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -26,7 +28,12 @@ export default function BoardsLayout({ children }: { children: React.ReactNode }
 
   return (
     <KanbanProvider>
-      <div className="flex min-h-screen w-full flex-col">{children}</div>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full flex-col">
+          <AppSidebar />
+          {children}
+        </div>
+      </SidebarProvider>
     </KanbanProvider>
   );
 }
