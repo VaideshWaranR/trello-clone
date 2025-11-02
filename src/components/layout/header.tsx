@@ -8,13 +8,13 @@ type HeaderProps = {
 
 export default function Header({ title, children }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-md sm:px-6">
+    <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background/95 px-6 backdrop-blur-lg">
       <div className="flex items-center gap-4">
         <Logo />
         {title && (
           <>
-            <div className="h-6 w-px bg-border" />
-            <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
+            <div className="h-8 w-px bg-border" />
+            <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           </>
         )}
       </div>

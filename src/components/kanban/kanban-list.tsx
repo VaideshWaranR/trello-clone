@@ -6,6 +6,7 @@ import KanbanCard from './kanban-card';
 import { Button } from '@/components/ui/button';
 import AddCardDialog from './add-card-dialog';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type KanbanListProps = {
   list: List;
@@ -32,41 +33,43 @@ export default function KanbanList({ list, onDragStart, onDrop, draggedCardId, h
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
-    // A simple way to determine drop index. Could be more precise.
     onDrop(list.id, list.cards.length); 
   };
   
   return (
     <div
       className={cn(
-        "flex w-80 flex-col rounded-lg bg-card/60 shadow-sm transition-colors",
-        isDragOver && "bg-primary/10"
+        "flex h-full w-80 flex-col rounded-xl bg-secondary/50",
       )}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
     >
-      <div className="flex items-center justify-between p-3 border-b">
-        <h2 className="font-semibold">{list.title}</h2>
-        <span className="text-sm font-medium text-muted-foreground bg-muted px-2 py-1 rounded-md">
+      <div className="flex items-center justify-between p-4 border-b-2 border-primary/10">
+        <h2 className="font-bold text-lg tracking-tight">{list.title}</h2>
+        <span className="text-sm font-bold text-muted-foreground bg-primary/10 px-2.5 py-1 rounded-full">
             {list.cards.length}
         </span>
       </div>
-      <div className="flex-1 space-y-3 p-3 overflow-y-auto">
-        {list.cards.map(card => (
-          <KanbanCard
-            key={card.id}
-            card={card}
-            listId={list.id}
-            isDragged={draggedCardId === card.id}
-            isHighlighted={highlightedCardId === card.id}
-            clearHighlight={clearHighlight}
-            onDragStart={onDragStart}
-          />
-        ))}
-      </div>
-      <div className="p-3 mt-auto">
-        <Button variant="ghost" className="w-full justify-start" onClick={() => setIsAddingCard(true)}>
+      <ScrollArea 
+        className="flex-1"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <div className={cn("flex flex-col gap-4 p-4 transition-colors", isDragOver && "bg-primary/10")}>
+          {list.cards.map(card => (
+            <KanbanCard
+              key={card.id}
+              card={card}
+              listId={list.id}
+              isDragged={draggedCardId === card.id}
+              isHighlighted={highlightedCardId === card.id}
+              clearHighlight={clearHighlight}
+              onDragStart={onDragStart}
+            />
+          ))}
+        </div>
+      </ScrollArea>
+      <div className="p-4 mt-auto border-t-2 border-primary/10">
+        <Button variant="ghost" className="w-full justify-center" onClick={() => setIsAddingCard(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add a card
         </Button>
