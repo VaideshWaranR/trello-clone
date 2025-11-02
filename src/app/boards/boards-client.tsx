@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { LayoutGrid } from 'lucide-react';
+import { LayoutGrid, Plus } from 'lucide-react';
 import Header from '@/components/layout/header';
 import { useKanban } from '@/components/kanban/kanban-context';
 import {
@@ -11,15 +11,37 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export default function BoardsClient() {
-  const { state } = useKanban();
+  const { state, dispatch } = useKanban();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newBoardName, setNewBoardName] = useState('');
+
+  const handleCreateBoard = () => {
+    if (newBoardName.trim()) {
+      dispatch({ type: 'ADD_BOARD', payload: { name: newBoardName.trim() } });
+      setNewBoardName('');
+      setIsDialogOpen(false);
+    }
+  };
 
   return (
     <>
       <Header title="My Boards">
-        <Button asChild>
-            <Link href="/">Back to Home</Link>
+        <Button onClick={() => setIsDialogOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Create Board
         </Button>
       </Header>
       <main className="flex-1 p-4 sm:p-6">
@@ -42,6 +64,38 @@ export default function BoardsClient() {
           ))}
         </div>
       </main>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create a new board</DialogTitle>
+            <DialogDescription>
+              Give your new board a name to get started.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="name" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="name"
+                value={newBoardName}
+                onChange={e => setNewBoardName(e.target.value)}
+                className="col-span-3"
+                autoFocus
+                onKeyDown={(e) => e.key === 'Enter' && handleCreateBoard()}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateBoard}>Create Board</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
