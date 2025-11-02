@@ -10,14 +10,18 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { SidebarInset } from '.././../components/ui/sidebar';
+import { Button } from '@/components/ui/button';
 
 export default function BoardsClient() {
   const { state } = useKanban();
 
   return (
-    <SidebarInset>
-      <Header title="My Boards" />
+    <>
+      <Header title="My Boards">
+        <Button asChild>
+            <Link href="/">Back to Home</Link>
+        </Button>
+      </Header>
       <main className="flex-1 p-4 sm:p-6">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {state.boards.map(board => (
@@ -38,6 +42,6 @@ export default function BoardsClient() {
           ))}
         </div>
       </main>
-    </SidebarInset>
+    </>
   );
 }
