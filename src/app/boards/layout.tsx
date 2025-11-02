@@ -4,6 +4,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Spinner } from '@/components/ui/spinner';
+import { KanbanProvider } from '@/components/kanban/kanban-context';
 
 export default function BoardsLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -23,5 +24,9 @@ export default function BoardsLayout({ children }: { children: React.ReactNode }
     );
   }
 
-  return <div className="flex min-h-screen w-full flex-col">{children}</div>;
+  return (
+    <KanbanProvider>
+      <div className="flex min-h-screen w-full flex-col">{children}</div>
+    </KanbanProvider>
+  );
 }
