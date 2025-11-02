@@ -9,6 +9,9 @@ import AddListForm from './add-list-form';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import TaskPrioritizer from './task-prioritizer';
 import { Card } from '@/types/kanban';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { LayoutGrid } from 'lucide-react';
 
 export default function KanbanBoardClient({ boardId }: { boardId: string }) {
   const { state, dispatch } = useKanban();
@@ -52,6 +55,12 @@ export default function KanbanBoardClient({ boardId }: { boardId: string }) {
   return (
     <>
       <Header title={board.name}>
+        <Button variant="outline" asChild>
+          <Link href="/boards">
+            <LayoutGrid className="mr-2 h-4 w-4" />
+            Switch Boards
+          </Link>
+        </Button>
         <TaskPrioritizer cards={allCards} setHighlightedCardId={setHighlightedCardId} />
       </Header>
       <main className="flex-1 overflow-x-auto bg-background">
